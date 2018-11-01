@@ -17,17 +17,20 @@ public final class NetworkUtils {
     private static final String API_KEY = BuildConfig.API_KEY;
     private final static String API_KEY_PARAM = "apiKey";
     private final static String COUNTRY_PARAM = "country";
+    private final static String CATEGORY_PARAM = "category";
     private final static String COUNTRY_VALUE = "us";
 
-    public static URL buildUrl() {
+    public static URL buildUrl(String category) {
         //https://api.themoviedb.org/3/movie/top_rated?api_key=api_key
         Uri.Builder builtUri = new Uri.Builder();
         builtUri.scheme("https")
-                .authority("newsapi.org")
-                .appendPath("v2")
-                .appendPath("top-headlines")
-                .appendQueryParameter(COUNTRY_PARAM,COUNTRY_VALUE)
-                .appendQueryParameter(API_KEY_PARAM,API_KEY);
+                    .authority("newsapi.org")
+                    .appendPath("v2")
+                    .appendPath("top-headlines")
+                    .appendQueryParameter(COUNTRY_PARAM, COUNTRY_VALUE)
+                    .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                     .appendQueryParameter(CATEGORY_PARAM, category);
+
         URL url = null;
         try {
             url = new URL(builtUri.toString());

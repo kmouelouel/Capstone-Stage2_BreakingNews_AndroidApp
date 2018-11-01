@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kmoue.breakingnews.adapters.NewsAdapter;
+import com.example.kmoue.breakingnews.data.NewsCategoryPreferences;
 import com.example.kmoue.breakingnews.utilities.NetworkUtils;
 import com.example.kmoue.breakingnews.utilities.OpenNewsJsonUtils;
 
@@ -34,10 +35,11 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsA
     private TextView mErrorMessageDisplay;
 
     private static final String SAVE_STATE_KEY = "savedState";
-    private static String category = "";
+    private NewsCategoryPreferences mNewsCategoryPreferences ;
     private RecyclerView mRecyclerView;
     private NewsAdapter mNewsAdapter;
     private String[] fetchedNews;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsA
         mRecyclerView.setHasFixedSize(true);
         mNewsAdapter = new NewsAdapter(this);
         mRecyclerView.setAdapter(mNewsAdapter);
+        mNewsCategoryPreferences = new NewsCategoryPreferences(this);
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(SAVE_STATE_KEY)) {
                 mNewsAdapter.setNewsData(savedInstanceState.getStringArray(SAVE_STATE_KEY));
@@ -101,43 +104,48 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsA
         Context context = MainActivity.this;
         String textToShow = "";
         switch (itemThatWasClickedId) {
+            case R.id.action_refresh:
+                textToShow = "refresh clicked";
+                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                break;
             case R.id.action_business:
-                this.category = "business";
+                mNewsCategoryPreferences.setCategory("business");
                 textToShow = "Business clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_entertainment:
-                this.category = "entertainment";
+                mNewsCategoryPreferences.setCategory("entertainment");
                 textToShow = "Entertainment clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_general:
-                this.category = "general";
+                mNewsCategoryPreferences.setCategory("general");
                 textToShow = "general clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_health:
-                this.category = "health";
+                mNewsCategoryPreferences.setCategory("health");
                 textToShow = "health clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_science:
-                this.category = "science";
+                mNewsCategoryPreferences.setCategory("science");
                 textToShow = "science clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_sports:
-                this.category = "sports";
+                mNewsCategoryPreferences.setCategory("sports");
                 textToShow = "sports clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_technology:
-                this.category = "technology";
+                mNewsCategoryPreferences.setCategory("technology");
                 textToShow = "technology clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
         }
-
+        invalidateData();
+        getSupportLoaderManager().restartLoader(NEWS_LOADER_ID, null, this);
         return super.onOptionsItemSelected(item);
     }
 
@@ -161,7 +169,8 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsA
             @Nullable
             @Override
             public String[] loadInBackground() {
-                URL newsRequestURL = NetworkUtils.buildUrl();
+                String category = mNewsCategoryPreferences.getCategory();
+                URL newsRequestURL = NetworkUtils.buildUrl(category);
                 try {
                     String jsonResponse = NetworkUtils.getResponseFromHttpUrl(newsRequestURL);
                     String[]  NewsJsonData = OpenNewsJsonUtils.getNewsFromJson(MainActivity.this, jsonResponse);

@@ -1,9 +1,12 @@
 package com.example.kmoue.breakingnews;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,18 +14,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kmoue.breakingnews.adapters.NewsAdapter;
 import com.example.kmoue.breakingnews.utilities.NetworkUtils;
+import com.example.kmoue.breakingnews.utilities.OpenNewsJsonUtils;
 
 import java.net.URL;
 
 
-public class MainActivity extends AppCompatActivity {
-
-
+public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsAdapterOnClickHandler {
+        private RecyclerView mRecyclerView;
+        private NewsAdapter mNewsAdapter;
+      private static String category="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mRecyclerView =(RecyclerView) findViewById(R.id.recyclerview_news);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mNewsAdapter= new NewsAdapter(this);
+        mRecyclerView.setAdapter(mNewsAdapter);
+
         loadNewsData();
 
     }
@@ -31,19 +44,29 @@ public class MainActivity extends AppCompatActivity {
         Context context=this.getApplicationContext();
         String category= "";
         FetchNewsAsyncTask mFetchNewsAsyncTask= new FetchNewsAsyncTask(context);
-         mFetchNewsAsyncTask.execute("");
+         mFetchNewsAsyncTask.execute(category);
 
     }
-    public class FetchNewsAsyncTask extends AsyncTask<String, Void,String> {
+
+    @Override
+    public void onClick(String newsElement) {
+        Toast.makeText(this, newsElement, Toast.LENGTH_SHORT).show();
+        Context context= this;
+        Class destinationClass = DetailActivity.class;
+        Intent intentTOStartDetailActivity;
+        intentTOStartDetailActivity = new Intent(context,destinationClass);
+        startActivity(intentTOStartDetailActivity);
+    }
+
+    public class FetchNewsAsyncTask extends AsyncTask<String, Void,String[]> {
         Context mContext;
         private ProgressBar mLoadingIndicator;
-        private TextView mErrorMessageDisplay;
-        private TextView mTextViewResultsJson;
+        private TextView mErrorMessageDisplay; ;
         public FetchNewsAsyncTask(Context context) {
             mContext = context;
             mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar_indicator);
             mErrorMessageDisplay = (TextView)  findViewById(R.id.tv_error_message_display);
-            mTextViewResultsJson = (TextView) findViewById(R.id.tv_search_results_json);
+
         }
 
         @Override
@@ -54,27 +77,28 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         // protected List<NewsObject> doInBackground(String... params) {
-        protected String doInBackground(String... params) {
+        protected String[] doInBackground(String... params) {
             if (params.length == 0) {
                 return null;
             }
             String sortPath = params[0];
             URL newsRequestURL = NetworkUtils.buildUrl();
+            String[] NewsJsonData=null;
             try {
                 String jsonResponse = NetworkUtils.getResponseFromHttpUrl(newsRequestURL);
-                //  List<NewsObject> NewsJsonData = OpenNewsJsonUtils.getNewsFromJson(mContext, jsonResponse);
-                return jsonResponse;
+                 NewsJsonData = OpenNewsJsonUtils.getNewsFromJson(mContext, jsonResponse);
+                return NewsJsonData;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
         }
         @Override
-        protected void onPostExecute(String newsData) {
+        protected void onPostExecute(String[] newsData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (newsData != null && !newsData.equals("")) {
                 showDataView();
-                mTextViewResultsJson.setText(newsData.toString());
+               mNewsAdapter.setNewsData(newsData);
             } else {
                 showErrorMessage();
             }
@@ -82,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
 
         private void showDataView(){
             mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-            mTextViewResultsJson.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
             mLoadingIndicator.setVisibility(View.INVISIBLE);
         }
         private void showErrorMessage(){
             mErrorMessageDisplay.setVisibility(View.VISIBLE);
-            mTextViewResultsJson.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
             mLoadingIndicator.setVisibility(View.INVISIBLE);
         }
     }
@@ -106,30 +130,37 @@ public class MainActivity extends AppCompatActivity {
         String textToShow = "";
         switch(itemThatWasClickedId){
             case R.id.action_business:
+                this.category="business";
                 textToShow ="Business clicked" ;
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_entertainment:
+                this.category="entertainment";
                   textToShow = "Entertainment clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_general:
+                this.category="general";
                 textToShow = "general clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_health:
+                this.category="health";
                 textToShow = "health clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_science:
+                this.category="science";
                 textToShow = "science clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_sports:
+                this.category="sports";
                 textToShow = "sports clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_technology:
+                this.category="technology";
                 textToShow = "technology clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 break;

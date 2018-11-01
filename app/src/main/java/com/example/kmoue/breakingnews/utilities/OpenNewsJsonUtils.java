@@ -26,9 +26,8 @@ public class OpenNewsJsonUtils {
     private static final String KEY_CONTENT="content";
     private static List<NewsObject> newsHeadlines;
 
-    public static List<NewsObject> getNewsFromJson(Context context, String newsJsonStr){
-        newsHeadlines = new ArrayList<>();
-        try{
+    public static String[] getNewsFromJson(Context context, String newsJsonStr){
+         try{
             JSONObject newsHeadlinesJsonObject = new JSONObject(newsJsonStr);
             if(newsHeadlinesJsonObject.has("message")){
                 String statusMessage=newsHeadlinesJsonObject.getString("message");
@@ -37,13 +36,14 @@ public class OpenNewsJsonUtils {
             }
             else{
                 JSONArray newsArticlesArray= newsHeadlinesJsonObject.getJSONArray(KEY_ARTICLES);
-                NewsObject newResult;
+                String[]  mNewsHeadlines= new String[newsArticlesArray.length()];
                 for(int i=0; i< newsArticlesArray.length(); i++){
                     JSONObject mNewsObject = newsArticlesArray.getJSONObject(i) ;
-                    newResult=getNewElement(mNewsObject);
-                    newsHeadlines.add(newResult);
+                    NewsObject newResult=getNewElement(mNewsObject);
+                    String title=newResult.getTitle();
+                    mNewsHeadlines[i]=title;
                 }
-                return newsHeadlines;
+                return mNewsHeadlines;
             }
 
         }catch(JSONException e){
@@ -55,9 +55,9 @@ public class OpenNewsJsonUtils {
     public static NewsObject getNewElement(JSONObject inNewsObject) {
         NewsObject currentNews = new NewsObject();
         try {
-
-            currentNews.setSourceId(inNewsObject.getString(KEY_SOURCE_ID));
-            currentNews.setSourceName(inNewsObject.getString(KEY_SOURCE_NAME));
+            JSONObject source=inNewsObject.getJSONObject("source");
+            currentNews.setSourceId(source.getString(KEY_SOURCE_ID));
+            currentNews.setSourceName(source.getString(KEY_SOURCE_NAME));
             currentNews.setAuthor(inNewsObject.getString(KEY_AUTHOR));
             currentNews.setContent(inNewsObject.getString(KEY_CONTENT));
             currentNews.setDescription(inNewsObject.getString(KEY_DESCRIPTION));

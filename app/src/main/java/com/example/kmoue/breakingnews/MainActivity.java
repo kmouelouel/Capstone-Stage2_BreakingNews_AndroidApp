@@ -49,12 +49,13 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsA
     }
 
     @Override
-    public void onClick(String newsElement) {
-        Toast.makeText(this, newsElement, Toast.LENGTH_SHORT).show();
+    public void onClick(String newsData) {
+        Toast.makeText(this, newsData, Toast.LENGTH_SHORT).show();
         Context context= this;
         Class destinationClass = DetailActivity.class;
         Intent intentTOStartDetailActivity;
         intentTOStartDetailActivity = new Intent(context,destinationClass);
+        intentTOStartDetailActivity.putExtra(Intent.EXTRA_TEXT,newsData);
         startActivity(intentTOStartDetailActivity);
     }
 

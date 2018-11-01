@@ -16,7 +16,7 @@ private TextView mNewsDisplay;
         if(intentThatStartThisActivity !=null && intentThatStartThisActivity.hasExtra((Intent.EXTRA_TEXT))){
             String mNewsData= intentThatStartThisActivity.getStringExtra(Intent.EXTRA_TEXT);
             mNewsDisplay.setText(mNewsData);
-            
+
         }
     }
 }

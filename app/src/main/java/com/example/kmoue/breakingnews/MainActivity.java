@@ -21,10 +21,13 @@ import com.example.kmoue.breakingnews.utilities.OpenNewsJsonUtils;
 import java.net.URL;
 
 
-public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsAdapterOnClickHandler,
+{
         private RecyclerView mRecyclerView;
         private NewsAdapter mNewsAdapter;
+        private static final String SAVE_STATE_KEY ="savedState";
       private static String category="";
+      private String[] fetchedNews;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +38,21 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsA
         mRecyclerView.setHasFixedSize(true);
         mNewsAdapter= new NewsAdapter(this);
         mRecyclerView.setAdapter(mNewsAdapter);
+        if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey(SAVE_STATE_KEY)){
+                mNewsAdapter.setNewsData(savedInstanceState.getStringArray(SAVE_STATE_KEY));
 
-        loadNewsData();
+            }
+        }else {
+            loadNewsData();
+        }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArray(SAVE_STATE_KEY,fetchedNews);
     }
 
     private void loadNewsData() {
@@ -99,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.NewsA
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (newsData != null && !newsData.equals("")) {
                 showDataView();
+                fetchedNews= new String[newsData.length];
+                fetchedNews= newsData;
                mNewsAdapter.setNewsData(newsData);
             } else {
                 showErrorMessage();

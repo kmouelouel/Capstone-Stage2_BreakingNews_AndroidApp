@@ -1,8 +1,10 @@
 package com.example.kmoue.breakingnews.utilities;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.kmoue.breakingnews.data.NewsContract;
 import com.example.kmoue.breakingnews.models.NewsObject;
 
 import org.json.JSONArray;
@@ -26,7 +28,7 @@ public class OpenNewsJsonUtils {
     private static final String KEY_CONTENT="content";
     private static List<NewsObject> newsHeadlines;
 
-    public static String[] getNewsFromJson(Context context, String newsJsonStr){
+    public static ContentValues[] getNewsFromJson(Context context, String newsJsonStr){
          try{
             JSONObject newsHeadlinesJsonObject = new JSONObject(newsJsonStr);
             if(newsHeadlinesJsonObject.has("message")){
@@ -36,14 +38,25 @@ public class OpenNewsJsonUtils {
             }
             else{
                 JSONArray newsArticlesArray= newsHeadlinesJsonObject.getJSONArray(KEY_ARTICLES);
-                String[]  mNewsHeadlines= new String[newsArticlesArray.length()];
+               // String[]  mNewsHeadlines= new String[newsArticlesArray.length()];
+                ContentValues[] newsContentValues = new ContentValues[newsArticlesArray.length()];
+
                 for(int i=0; i< newsArticlesArray.length(); i++){
                     JSONObject mNewsObject = newsArticlesArray.getJSONObject(i) ;
-                    NewsObject newResult=getNewElement(mNewsObject);
-                    String title=newResult.getTitle();
-                    mNewsHeadlines[i]=title;
+                    ContentValues newsValues = new ContentValues();
+                    JSONObject source=mNewsObject.getJSONObject("source");
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_SOURCE_ID, source.getString(KEY_SOURCE_ID));
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_SOURCE_NAME, source.getString(KEY_SOURCE_NAME));
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_AUTHOR, mNewsObject.getString(KEY_AUTHOR));
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_TITLE, mNewsObject.getString(KEY_TITLE));
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_DESCRIPTION, mNewsObject.getString(KEY_DESCRIPTION));
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_URL, mNewsObject.getString(KEY_URL));
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_URL_TO_IMAGE, mNewsObject.getString(KEY_URL_TO_IMAGE));
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_PUBLISHED_DATE, mNewsObject.getString(KEY_PUBLISHEDAT));
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_CONTENT, mNewsObject.getString(KEY_CONTENT));
+                    newsContentValues[i] = newsValues;
                 }
-                return mNewsHeadlines;
+                return newsContentValues;
             }
 
         }catch(JSONException e){
@@ -52,26 +65,6 @@ public class OpenNewsJsonUtils {
 
         }
     }
-    public static NewsObject getNewElement(JSONObject inNewsObject) {
-        NewsObject currentNews = new NewsObject();
-        try {
-            JSONObject source=inNewsObject.getJSONObject("source");
-            currentNews.setSourceId(source.getString(KEY_SOURCE_ID));
-            currentNews.setSourceName(source.getString(KEY_SOURCE_NAME));
-            currentNews.setAuthor(inNewsObject.getString(KEY_AUTHOR));
-            currentNews.setContent(inNewsObject.getString(KEY_CONTENT));
-            currentNews.setDescription(inNewsObject.getString(KEY_DESCRIPTION));
-            currentNews.setPublishedAt(inNewsObject.getString(KEY_PUBLISHEDAT));
-            currentNews.setTitle(inNewsObject.getString(KEY_TITLE));
-            currentNews.setUrl(inNewsObject.getString(KEY_URL));
-            currentNews.setUrlToImage(inNewsObject.getString(KEY_URL_TO_IMAGE));
-            return currentNews;
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
 
 }

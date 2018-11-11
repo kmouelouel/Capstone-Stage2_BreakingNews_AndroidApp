@@ -1,6 +1,7 @@
 package com.example.kmoue.breakingnews.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,14 +10,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.kmoue.breakingnews.R;
+import com.example.kmoue.breakingnews.data.NewsContract;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterViewHolder>
-
-{
-    private String[] mNewsHeadlines;
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterViewHolder> {
+    private Cursor mCursor;
     private final NewsAdapterOnClickHandler mClickHandler;
 
-
+   public void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        // After the new Cursor is set, call notifyDataSetChanged
+        notifyDataSetChanged();
+    }
 
     public interface NewsAdapterOnClickHandler {
         void onClick(String newsElement);
@@ -38,14 +42,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
 
     @Override
     public void onBindViewHolder(@NonNull NewsAdapterViewHolder holder, int position) {
-        String weatherForThisDay = mNewsHeadlines[position];
-        holder.mResultsTextView.setText(weatherForThisDay);
+         mCursor.moveToPosition(position);
+
+        String newsElement=mCursor.getString(
+                mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_TITLE));
+        holder.mResultsTextView.setText(newsElement);
     }
 
     @Override
     public int getItemCount() {
-       if(mNewsHeadlines ==null) return 0;
-       return mNewsHeadlines.length;
+       if(mCursor ==null) return 0;
+       return mCursor.getCount();
     }
 
     public class NewsAdapterViewHolder extends RecyclerView.ViewHolder   implements View.OnClickListener {
@@ -59,13 +66,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            String newsData = mNewsHeadlines[adapterPosition];
-            mClickHandler.onClick(newsData);
+            mCursor.moveToPosition(adapterPosition);
+            String newsElement=mCursor.getString(4);
+            mClickHandler.onClick(newsElement);
         }
     }
 
-    public void setNewsData(String[] data) {
-        mNewsHeadlines = data;
-        notifyDataSetChanged();
-    }
+
 }

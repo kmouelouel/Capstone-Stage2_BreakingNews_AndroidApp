@@ -24,6 +24,7 @@ import android.support.v4.content.Loader;
 import com.example.kmoue.breakingnews.adapters.NewsAdapter;
 import com.example.kmoue.breakingnews.data.NewsCategoryPreferences;
 import com.example.kmoue.breakingnews.data.NewsContract;
+import com.example.kmoue.breakingnews.utilities.FakeDataUtils;
 
 import java.net.URL;
 
@@ -31,16 +32,13 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity
         implements NewsAdapter.NewsAdapterOnClickHandler,
         LoaderManager.LoaderCallbacks<Cursor> {
-    private static final int NEWS_LOADER_ID =22;
+    private static final int NEWS_LOADER_ID = 22;
+    private static final String SAVE_STATE_KEY = "savedState";
     private int mPosition = RecyclerView.NO_POSITION;
     private ProgressBar mLoadingIndicator;
-
-
-    private static final String SAVE_STATE_KEY = "savedState";
-    private NewsCategoryPreferences mNewsCategoryPreferences ;
+    private NewsCategoryPreferences mNewsCategoryPreferences;
     private RecyclerView mRecyclerView;
     private NewsAdapter mNewsAdapter;
-
 
 
     @Override
@@ -48,28 +46,33 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setElevation(0f);
+
+        //insert fake data:
+        FakeDataUtils.insertFakeData(this);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_news);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mNewsAdapter = new NewsAdapter(this);
+        mNewsAdapter = new NewsAdapter(this, this);
         mRecyclerView.setAdapter(mNewsAdapter);
         mNewsCategoryPreferences = new NewsCategoryPreferences(this);
         showLoading();
-         //   loadNewsData();
-            int loaderId = NEWS_LOADER_ID;
-            LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
-            Bundle bundleForLoader = null;
-            getSupportLoaderManager().initLoader(loaderId,bundleForLoader,callback);
+        //   loadNewsData();
+        int loaderId = NEWS_LOADER_ID;
+        LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
+        Bundle bundleForLoader = null;
+        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
 
     }
+
     private void showLoading() {
         /* Then, hide the weather data */
         mRecyclerView.setVisibility(View.INVISIBLE);
         /* Finally, show the loading indicator */
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
+
     @Override
     public void onClick(String newsData) {
         Toast.makeText(this, newsData, Toast.LENGTH_SHORT).show();
@@ -80,7 +83,6 @@ public class MainActivity extends AppCompatActivity
         intentTOStartDetailActivity.putExtra(Intent.EXTRA_TEXT, newsData);
         startActivity(intentTOStartDetailActivity);
     }
-
 
 
     @Override
@@ -155,23 +157,39 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        getSupportLoaderManager().restartLoader(NEWS_LOADER_ID,null, this);
+        getSupportLoaderManager().restartLoader(NEWS_LOADER_ID, null, this);
     }
 
     @NonNull
     @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return null;
+    public Loader<Cursor> onCreateLoader(int loaderId, @Nullable Bundle args) {
+
+        switch (loaderId) {
+            case NEWS_LOADER_ID:
+                Uri QueryUri = NewsContract.NewsEntry.CONTENT_URI;
+                return new CursorLoader(this,
+                        QueryUri,
+                        null,
+                        null,
+                        null,
+                        null);
+
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderId);
+        }
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-
+        mNewsAdapter.swapCursor(data);
+        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        mRecyclerView.smoothScrollToPosition(mPosition);
+        if (data.getCount() != 0) showDataView();
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
+        mNewsAdapter.swapCursor(null);
     }
 }
 

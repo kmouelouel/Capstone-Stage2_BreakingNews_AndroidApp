@@ -130,9 +130,34 @@ public class NewsProvider extends ContentProvider {
 
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        //only perform our implementation of bulkInsert if the URI matches the NEWS_CODE code
+        final SQLiteDatabase db= mOpenHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case CODE_NEWS:
+                db.beginTransaction();
+                int rowInserted = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(NewsContract.NewsEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            rowInserted++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                if (rowInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
 
-        return super.bulkInsert(uri, values);
-    }
+                }
+                return rowInserted;
+                    default:
+                        return super.bulkInsert(uri, values);
+                }
+        }
+
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {

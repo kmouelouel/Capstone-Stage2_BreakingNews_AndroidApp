@@ -15,6 +15,7 @@ import com.example.kmoue.breakingnews.data.NewsContract;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterViewHolder> {
     private Cursor mCursor;
     private final NewsAdapterOnClickHandler mClickHandler;
+    private final Context mContext;
 
    public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
@@ -26,8 +27,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
         void onClick(String newsElement);
     }
 
-    public NewsAdapter(NewsAdapterOnClickHandler clickHandler) {
+    public NewsAdapter(NewsAdapterOnClickHandler clickHandler, @NonNull Context context) {
         mClickHandler = clickHandler;
+        mContext=context;
     }
     @NonNull
     @Override
@@ -43,10 +45,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
     @Override
     public void onBindViewHolder(@NonNull NewsAdapterViewHolder holder, int position) {
          mCursor.moveToPosition(position);
-
-        String newsElement=mCursor.getString(
-                mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_TITLE));
-        holder.mResultsTextView.setText(newsElement);
+        int titleCol=mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_TITLE);
+        int authorCol=mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_AUTHOR);
+        String title= mCursor.getString(titleCol);
+        String author=mCursor.getString(authorCol);
+        String output=title+ " - "+author;
+        //String newsElement=mCursor.getString(
+        //        mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_TITLE));
+        holder.mResultsTextView.setText(output);
     }
 
     @Override
@@ -65,9 +71,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
 
         @Override
         public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
-            String newsElement=mCursor.getString(4);
+            String newsElement=mResultsTextView.getText().toString();
             mClickHandler.onClick(newsElement);
         }
     }

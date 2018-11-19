@@ -24,7 +24,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
     }
 
     public interface NewsAdapterOnClickHandler {
-        void onClick(String newsElement);
+        void onClick(int position);
     }
 
     public NewsAdapter(NewsAdapterOnClickHandler clickHandler, @NonNull Context context) {
@@ -47,9 +47,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
          mCursor.moveToPosition(position);
         int titleCol=mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_TITLE);
         int authorCol=mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_AUTHOR);
+        int indexCol=mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_NEWS_ID);
         String title= mCursor.getString(titleCol);
         String author=mCursor.getString(authorCol);
-        String output=title+ " - "+author;
+        String index = mCursor.getString(indexCol);
+        String output="position"+ index+" - "+title+ " - "+author;
         //String newsElement=mCursor.getString(
         //        mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_TITLE));
         holder.mResultsTextView.setText(output);
@@ -71,8 +73,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
 
         @Override
         public void onClick(View v) {
-            String newsElement=mResultsTextView.getText().toString();
-            mClickHandler.onClick(newsElement);
+            int adapterPosition = getAdapterPosition();
+            mClickHandler.onClick(adapterPosition);
         }
     }
 

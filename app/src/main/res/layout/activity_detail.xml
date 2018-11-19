@@ -1,15 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp"
-    tools:context=".DetailActivity">
 
-<TextView
-    android:id="@+id/tv_display_newsDetails"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textSize="22sp"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        tools:context=".DetailActivity">
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/news_source_id"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="source_id"/>
+    <TextView
+        android:id="@+id/news_source_name"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="source_name"/>
+    <TextView
+        android:id="@+id/news_title"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="title"/>
+    <TextView
+        android:id="@+id/news_author"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="author"/>
+    <TextView
+        android:id="@+id/news_url"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="url"/>
+
+    <TextView
+        android:id="@+id/news_description"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="description"/>
+    <TextView
+        android:id="@+id/tv_published_date"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Monday, November 24"/>
+    <TextView
+        android:id="@+id/news_content"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="content"/>
+    <ImageView
+        android:id="@+id/news_urlToImage"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:src="@drawable/news"/>
+
+
+</LinearLayout>

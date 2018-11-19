@@ -17,8 +17,8 @@ public class NewsContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_NEWS)
                 .build();
-
         public static final String TABLE_NAME = "news";
+        public static final String COLUMN_NEWS_ID = "news_id";
         public static final String COLUMN_SOURCE_ID = "source_id";
         public static final String COLUMN_SOURCE_NAME = "source_name";
         public static final String COLUMN_AUTHOR =  "author";

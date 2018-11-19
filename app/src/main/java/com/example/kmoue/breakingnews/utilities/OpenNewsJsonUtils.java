@@ -26,9 +26,8 @@ public class OpenNewsJsonUtils {
     private static final String KEY_URL_TO_IMAGE="urlToImage";
     private static final String KEY_PUBLISHEDAT="publishedAt";
     private static final String KEY_CONTENT="content";
-    private static List<NewsObject> newsHeadlines;
 
-    public static ContentValues[] getNewsFromJson(Context context, String newsJsonStr){
+    public static ContentValues[] getNewsContentValueFromJson(Context context, String newsJsonStr){
          try{
             JSONObject newsHeadlinesJsonObject = new JSONObject(newsJsonStr);
             if(newsHeadlinesJsonObject.has("message")){
@@ -46,6 +45,7 @@ public class OpenNewsJsonUtils {
                     ContentValues newsValues = new ContentValues();
                     JSONObject source=mNewsObject.getJSONObject("source");
                     newsValues.put(NewsContract.NewsEntry.COLUMN_SOURCE_ID, source.getString(KEY_SOURCE_ID));
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_NEWS_ID, Integer.toString(i));
                     newsValues.put(NewsContract.NewsEntry.COLUMN_SOURCE_NAME, source.getString(KEY_SOURCE_NAME));
                     newsValues.put(NewsContract.NewsEntry.COLUMN_AUTHOR, mNewsObject.getString(KEY_AUTHOR));
                     newsValues.put(NewsContract.NewsEntry.COLUMN_TITLE, mNewsObject.getString(KEY_TITLE));
@@ -65,6 +65,7 @@ public class OpenNewsJsonUtils {
 
         }
     }
+
 
 
 }

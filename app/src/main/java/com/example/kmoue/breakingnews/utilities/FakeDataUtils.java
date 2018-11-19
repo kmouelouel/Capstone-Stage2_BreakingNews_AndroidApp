@@ -21,6 +21,7 @@ public class FakeDataUtils {
     private static ContentValues createTestNewsContentValues(int index) {
         ContentValues testNewsValues = new ContentValues();
 
+     testNewsValues.put(NewsContract.NewsEntry.COLUMN_NEWS_ID,index);
         testNewsValues.put(NewsContract.NewsEntry.COLUMN_SOURCE_ID, "source id "+index);
         testNewsValues.put(NewsContract.NewsEntry.COLUMN_SOURCE_NAME, "source name "+index);
         testNewsValues.put(NewsContract.NewsEntry.COLUMN_AUTHOR, "author "+index);

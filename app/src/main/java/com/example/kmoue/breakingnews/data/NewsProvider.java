@@ -58,11 +58,18 @@ public class NewsProvider extends ContentProvider {
             case CODE_NEWS_WITH_ID:
                 //using selection and selectionArgs
                 //URI: content://<authority>/tasks/#
-                String id = uri.getPathSegments().get(1);
+              String id = uri.getLastPathSegment();
                 //Selection is the _ and the Selection argsID_coluum =?, and the selection args= the row ID from URI
-                String mSelection = "_id=?";
-                String[] mSelectionArgs = new String[]{id};
-                retCursor = db.query(NewsContract.NewsEntry.TABLE_NAME,projection,mSelection,mSelectionArgs, null, null,sortOrder);
+              //  String mSelection = "_id=?";
+               String[] mSelectionArgs = new String[]{id};
+                retCursor = db.query(NewsContract.NewsEntry.TABLE_NAME,
+                        projection,
+                        NewsContract.NewsEntry.COLUMN_NEWS_ID + " = ? ",
+                        mSelectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
           // default exception
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

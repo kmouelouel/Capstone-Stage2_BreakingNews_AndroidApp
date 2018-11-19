@@ -24,6 +24,7 @@ import android.support.v4.content.Loader;
 import com.example.kmoue.breakingnews.adapters.NewsAdapter;
 import com.example.kmoue.breakingnews.data.NewsCategoryPreferences;
 import com.example.kmoue.breakingnews.data.NewsContract;
+import com.example.kmoue.breakingnews.sync.BreakingNewsSyncUtils;
 import com.example.kmoue.breakingnews.utilities.FakeDataUtils;
 
 import java.net.URL;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setElevation(0f);
 
         //insert fake data:
-        FakeDataUtils.insertFakeData(this);
+     //  FakeDataUtils.insertFakeData(this);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_news);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity
         LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
         Bundle bundleForLoader = null;
         getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
-
+       BreakingNewsSyncUtils.initialize(this);
+//
     }
 
     private void showLoading() {
@@ -74,19 +76,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClick(String newsData) {
-        Toast.makeText(this, newsData, Toast.LENGTH_SHORT).show();
-        Context context = this;
-        Class destinationClass = DetailActivity.class;
-        Intent intentTOStartDetailActivity;
-        intentTOStartDetailActivity = new Intent(context, destinationClass);
-        intentTOStartDetailActivity.putExtra(Intent.EXTRA_TEXT, newsData);
-        startActivity(intentTOStartDetailActivity);
+    public void onClick(int idPosition) {
+       // Toast.makeText(this, idPosition., Toast.LENGTH_SHORT).show();
+        Intent intentToStartDetailActivity = new Intent(this, DetailActivity.class);
+        Uri uriForNewsClicked = NewsContract.NewsEntry.buildNewsUriWithID(idPosition);
+        intentToStartDetailActivity.setData(uriForNewsClicked);
+        startActivity(intentToStartDetailActivity);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.main, menu);
         //   Return true to display your menu
         return true;

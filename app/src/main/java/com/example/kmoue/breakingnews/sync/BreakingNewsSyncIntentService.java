@@ -12,6 +12,7 @@ public class BreakingNewsSyncIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-         BreakingNewsSyncTask.syncNews(this);
+
+        BreakingNewsSyncTask.syncNews(this);
     }
 }

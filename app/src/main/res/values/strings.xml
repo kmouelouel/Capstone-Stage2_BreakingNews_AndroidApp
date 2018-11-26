@@ -9,6 +9,7 @@
     <string name="science">Science</string>
     <string name="sports">Sports</string>
     <string name="technology">Technology</string>
+    <string name="main_notification_channel_name">Primary</string>
 
     <string name="content_authority">com.example.kmoue.breakingnews</string>
 </resources>

@@ -17,6 +17,7 @@ public class BreakingNewsFirebaseJobService  extends JobService {
             protected Void doInBackground(Void... voids) {
                 Context context = getApplicationContext();
                 BreakingNewsSyncTask.syncNews(context);
+                jobFinished(jobParameters, false);
                 return null;
             }
 

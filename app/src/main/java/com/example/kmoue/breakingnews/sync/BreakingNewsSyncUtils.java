@@ -19,16 +19,16 @@ import com.firebase.jobdispatcher.Trigger;
 import java.util.concurrent.TimeUnit;
 
 public class BreakingNewsSyncUtils {
-   // Add constant values to sync Sunshine every 3 - 4 hours
-    private static final int SYNC_INTERVAL_HOURS = 3;
-    private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
-    private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
-    //   Add a sync tag to identify our sync job
+   // Add constant values to sync news every 15 minutes
+    private static final int REMINDER_INTERVAL_MINUTES = 15;
+    private static final int REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(REMINDER_INTERVAL_MINUTES));
+    private static final int SYNC_FLEXTIME_SECONDS = REMINDER_INTERVAL_SECONDS;
     private static final String NEWS_SYNC_TAG = "breakingNews-sync";
-
+    private static  boolean sInitialized;
     // Create a method to schedule our periodic breakingNews sync
 
     static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
+
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
         /* Create the Job to periodically sync Sunshine */
@@ -39,40 +39,46 @@ public class BreakingNewsSyncUtils {
                 .setLifetime(Lifetime.FOREVER)
                 .setRecurring(true)
                 .setTrigger(Trigger.executionWindow(
-                        SYNC_INTERVAL_HOURS,
-                        SYNC_INTERVAL_HOURS+SYNC_FLEXTIME_SECONDS))
+                        REMINDER_INTERVAL_SECONDS,
+                        REMINDER_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
                 .setReplaceCurrent(true)
                 .build();
         dispatcher.schedule(syncNewsJob);
     }
 
-    private static  boolean sInitialized;
-    public static void startImmediateSync(@NonNull final Context context) {
-        Intent intentToSyncImmediately= new Intent(context, BreakingNewsSyncIntentService.class);
-        context.startService(intentToSyncImmediately);
-    }
-    synchronized public static void initialize(@NonNull final Context context){
-        if(sInitialized) return;
-        sInitialized= true;
+    synchronized public static void initialize(@NonNull final Context context) {
+        if (sInitialized) return;
+        sInitialized = true;
         scheduleFirebaseJobDispatcherSync(context);
-        new AsyncTask<Void,Void,Void>(){
-
+        Thread checkForEmpty = new Thread(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
+                /* URI for every row of weather data in our weather table*/
                 Uri newsQueryUri = NewsContract.NewsEntry.CONTENT_URI;
-                Cursor mCursor = context.getContentResolver().query(
+                String[] projectionColumns = {NewsContract.NewsEntry._ID};
+                Cursor cursor = context.getContentResolver().query(
                         newsQueryUri,
-                        null,
+                        projectionColumns,
                         null,
                         null,
                         null);
-                if(mCursor != null && mCursor.getCount() != 0){
+                if (null == cursor || cursor.getCount() == 0) {
                     startImmediateSync(context);
                 }
-                mCursor.close();
-                return null;
-            }
-        }.execute();
 
+                /* Make sure to close the Cursor to avoid memory leaks! */
+                cursor.close();
+            }
+        });
+
+        /* Finally, once the thread is prepared, fire it off to perform our checks. */
+        checkForEmpty.start();
+    }
+
+
+
+    public static void startImmediateSync(@NonNull final Context context) {
+        Intent intentToSyncImmediately= new Intent(context, BreakingNewsSyncIntentService.class);
+        context.startService(intentToSyncImmediately);
     }
 }

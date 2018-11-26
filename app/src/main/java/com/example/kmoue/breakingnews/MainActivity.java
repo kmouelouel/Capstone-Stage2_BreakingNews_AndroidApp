@@ -12,12 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.content.Loader;
 
@@ -25,9 +23,6 @@ import com.example.kmoue.breakingnews.adapters.NewsAdapter;
 import com.example.kmoue.breakingnews.data.NewsCategoryPreferences;
 import com.example.kmoue.breakingnews.data.NewsContract;
 import com.example.kmoue.breakingnews.sync.BreakingNewsSyncUtils;
-import com.example.kmoue.breakingnews.utilities.FakeDataUtils;
-
-import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity
@@ -48,8 +43,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         getSupportActionBar().setElevation(0f);
 
-        //insert fake data:
-     //  FakeDataUtils.insertFakeData(this);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_news);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -59,17 +52,16 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mNewsAdapter);
         mNewsCategoryPreferences = new NewsCategoryPreferences(this);
         showLoading();
-        //   loadNewsData();
         int loaderId = NEWS_LOADER_ID;
         LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
         Bundle bundleForLoader = null;
         getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
-       BreakingNewsSyncUtils.initialize(this);
-//
+        BreakingNewsSyncUtils.initialize(this);
+
     }
 
     private void showLoading() {
-        /* Then, hide the weather data */
+        /* Then, hide the news data */
         mRecyclerView.setVisibility(View.INVISIBLE);
         /* Finally, show the loading indicator */
         mLoadingIndicator.setVisibility(View.VISIBLE);
@@ -77,7 +69,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(int idPosition) {
-       // Toast.makeText(this, idPosition., Toast.LENGTH_SHORT).show();
         Intent intentToStartDetailActivity = new Intent(this, DetailActivity.class);
         Uri uriForNewsClicked = NewsContract.NewsEntry.buildNewsUriWithID(idPosition);
         intentToStartDetailActivity.setData(uriForNewsClicked);
@@ -89,7 +80,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.main, menu);
-        //   Return true to display your menu
+
         return true;
     }
 
@@ -192,5 +183,6 @@ public class MainActivity extends AppCompatActivity
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mNewsAdapter.swapCursor(null);
     }
+
 }
 

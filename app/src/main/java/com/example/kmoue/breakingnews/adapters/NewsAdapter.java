@@ -7,10 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kmoue.breakingnews.R;
 import com.example.kmoue.breakingnews.data.NewsContract;
+import com.squareup.picasso.Picasso;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterViewHolder> {
     private Cursor mCursor;
@@ -45,16 +47,26 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
     @Override
     public void onBindViewHolder(@NonNull NewsAdapterViewHolder holder, int position) {
          mCursor.moveToPosition(position);
-        int titleCol=mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_TITLE);
-        int authorCol=mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_AUTHOR);
-        int indexCol=mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_NEWS_ID);
-        String title= mCursor.getString(titleCol);
-        String author=mCursor.getString(authorCol);
-        String index = mCursor.getString(indexCol);
-        String output="position"+ index+" - "+title+ " - "+author;
-        //String newsElement=mCursor.getString(
-        //        mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_TITLE));
-        holder.mResultsTextView.setText(output);
+        int titleCol = mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_TITLE);
+        int imageCol = mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_URL_TO_IMAGE);
+        int sourceCol = mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_SOURCE_NAME);
+        holder.textView_newsTitle.setText(mCursor.getString(titleCol));
+        if (mCursor.getString(imageCol).equals("null")) {
+         //   Picasso.with(mContext).load(R.drawable.breakingnewsfeature).into(holder.imageView_news);
+            holder.imageView_news.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+        } else {
+            Picasso.with(mContext).load(mCursor.getString(imageCol)).into(holder.imageView_news);
+        }
+        if (mCursor.getString(sourceCol).equals("null")) {
+            holder.textView_newsSource.setVisibility(View.INVISIBLE);
+        } else {
+            String sourceValue=mCursor.getString(sourceCol);
+            String sourceLabel="Source: ";
+            sourceLabel=sourceLabel.concat(sourceValue);
+            holder.textView_newsSource.setText(sourceLabel);
+        }
+
+
     }
 
     @Override
@@ -64,10 +76,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
     }
 
     public class NewsAdapterViewHolder extends RecyclerView.ViewHolder   implements View.OnClickListener {
-        public final TextView mResultsTextView;
+        public final ImageView imageView_news;
+        public final TextView textView_newsTitle;
+        public final TextView textView_newsSource;
         public NewsAdapterViewHolder(View view) {
             super(view);
-            mResultsTextView= (TextView) view.findViewById(R.id.tv_news_data);
+            imageView_news = (ImageView) view.findViewById(R.id.imageView_news);
+            textView_newsTitle = (TextView) view.findViewById(R.id.tv_newsTitle);
+            textView_newsSource = (TextView) view.findViewById(R.id.tv_newsSource);
             view.setOnClickListener(this);
         }
 

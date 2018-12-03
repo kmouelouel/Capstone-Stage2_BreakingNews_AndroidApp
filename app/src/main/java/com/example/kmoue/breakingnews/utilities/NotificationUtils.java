@@ -72,7 +72,7 @@ public class NotificationUtils {
             NotificationCompat.Builder notificationBuilder =
                     new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                             .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                            .setSmallIcon(R.drawable.headline)
+                            .setSmallIcon(R.drawable.news)
                             .setLargeIcon(largeIcon(context))
                             .setContentTitle(notificationTitle)
                             .setContentText(notificationText)

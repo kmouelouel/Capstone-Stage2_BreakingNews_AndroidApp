@@ -13,13 +13,14 @@ import com.example.kmoue.breakingnews.utilities.OpenNewsJsonUtils;
 
 import java.net.URL;
 
+import static com.example.kmoue.breakingnews.data.NewsCategoryPreferences.returnCategory;
+
 public class BreakingNewsSyncTask {
 
     synchronized public static void syncNews(Context context){
         try{
             boolean isThereBreakingNews= false;
-            NewsCategoryPreferences newsCategory= new NewsCategoryPreferences(context);
-            String category= newsCategory.getCategory();
+            String category= returnCategory(context);
             URL newsRequestUrl = NetworkUtils.buildUrl(category);
             String JsonNewsResponse = NetworkUtils.getResponseFromHttpUrl(newsRequestUrl);
             ContentValues[] newsValues = OpenNewsJsonUtils.getNewsContentValueFromJson(context,JsonNewsResponse);

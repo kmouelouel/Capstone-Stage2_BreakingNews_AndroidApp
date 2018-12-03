@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Breaking News</string>
     <string name="error_message">Failed to get results,Please try again!</string>
-    <string name="refresh">Refresh</string>
+    <string name="link">Link</string>
     <string name="business">Business</string>
     <string name="entertainment">Entertainment</string>
     <string name="general">General</string>

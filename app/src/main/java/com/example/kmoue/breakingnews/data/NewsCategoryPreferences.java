@@ -3,18 +3,14 @@ package com.example.kmoue.breakingnews.data;
 import android.content.Context;
 
 public class NewsCategoryPreferences {
-    private String category;
-    Context mContext;
-    public NewsCategoryPreferences(Context context){
-        mContext = context;
-        category = "";
-    }
 
-    public String getCategory() {
+    private static String  category;
+
+    public static String  returnCategory(Context context) {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public static  void updateCategory(String mCategory) {
+        category = mCategory;
     }
 }

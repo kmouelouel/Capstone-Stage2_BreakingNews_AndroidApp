@@ -13,8 +13,8 @@ import java.util.Scanner;
 
 public final class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
-    private static final String STATIC_NEWS_URL ="https://newsapi.org/v2/top-headlines?country=us";
-    private static final String API_KEY = BuildConfig.API_KEY;
+   // private static final String STATIC_NEWS_URL ="https://newsapi.org/v2/top-headlines?country=us";
+   private static final String API_KEY = BuildConfig.API_KEY;
     private final static String API_KEY_PARAM = "apiKey";
     private final static String COUNTRY_PARAM = "country";
     private final static String CATEGORY_PARAM = "category";

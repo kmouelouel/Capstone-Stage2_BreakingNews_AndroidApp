@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,13 +36,14 @@ public class MainActivity extends AppCompatActivity
     private NewsCategoryPreferences mNewsCategoryPreferences;
     private RecyclerView mRecyclerView;
     private NewsAdapter mNewsAdapter;
-
+    private Toolbar mToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setElevation(0f);
+        mToolBar= (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolBar);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_news);
@@ -50,13 +52,12 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setHasFixedSize(true);
         mNewsAdapter = new NewsAdapter(this, this);
         mRecyclerView.setAdapter(mNewsAdapter);
-        mNewsCategoryPreferences = new NewsCategoryPreferences(this);
         showLoading();
         int loaderId = NEWS_LOADER_ID;
         LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
         Bundle bundleForLoader = null;
         getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
-        BreakingNewsSyncUtils.initialize(this);
+        BreakingNewsSyncUtils.initialize(this,false);
 
     }
 
@@ -90,48 +91,53 @@ public class MainActivity extends AppCompatActivity
         Context context = MainActivity.this;
         String textToShow = "";
         switch (itemThatWasClickedId) {
-            case R.id.action_refresh:
-                textToShow = "refresh clicked";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                break;
+
             case R.id.action_business:
-                mNewsCategoryPreferences.setCategory("business");
+                NewsCategoryPreferences.updateCategory("business");
                 textToShow = "Business clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                mToolBar.setTitle("Business");
                 break;
             case R.id.action_entertainment:
-                mNewsCategoryPreferences.setCategory("entertainment");
+                NewsCategoryPreferences.updateCategory("entertainment");
                 textToShow = "Entertainment clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                mToolBar.setTitle("Entertainment");
                 break;
             case R.id.action_general:
-                mNewsCategoryPreferences.setCategory("general");
+                NewsCategoryPreferences.updateCategory("general");
                 textToShow = "general clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                mToolBar.setTitle("General");
                 break;
             case R.id.action_health:
-                mNewsCategoryPreferences.setCategory("health");
-                textToShow = "health clicked";
+                NewsCategoryPreferences.updateCategory("health");
+                 textToShow = "health clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                mToolBar.setTitle("General");
                 break;
             case R.id.action_science:
-                mNewsCategoryPreferences.setCategory("science");
+                NewsCategoryPreferences.updateCategory("science");
                 textToShow = "science clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                mToolBar.setTitle("Science");
                 break;
             case R.id.action_sports:
-                mNewsCategoryPreferences.setCategory("sports");
+                NewsCategoryPreferences.updateCategory("sports");
                 textToShow = "sports clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                mToolBar.setTitle("Sports");
                 break;
             case R.id.action_technology:
-                mNewsCategoryPreferences.setCategory("technology");
+                NewsCategoryPreferences.updateCategory("technology");
                 textToShow = "technology clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                mToolBar.setTitle("Technology");
                 break;
         }
         invalidateData();
         getSupportLoaderManager().restartLoader(NEWS_LOADER_ID, null, this);
+        BreakingNewsSyncUtils.initialize(this,true);
         return super.onOptionsItemSelected(item);
     }
 

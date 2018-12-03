@@ -19,12 +19,12 @@ import com.firebase.jobdispatcher.Trigger;
 import java.util.concurrent.TimeUnit;
 
 public class BreakingNewsSyncUtils {
-   // Add constant values to sync news every 15 minutes
+    // Add constant values to sync news every 15 minutes
     private static final int REMINDER_INTERVAL_MINUTES = 15;
     private static final int REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(REMINDER_INTERVAL_MINUTES));
     private static final int SYNC_FLEXTIME_SECONDS = REMINDER_INTERVAL_SECONDS;
     private static final String NEWS_SYNC_TAG = "breakingNews-sync";
-    private static  boolean sInitialized;
+    private static boolean sInitialized;
     // Create a method to schedule our periodic breakingNews sync
 
     static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
@@ -46,39 +46,51 @@ public class BreakingNewsSyncUtils {
         dispatcher.schedule(syncNewsJob);
     }
 
-    synchronized public static void initialize(@NonNull final Context context) {
-        if (sInitialized) return;
-        sInitialized = true;
-        scheduleFirebaseJobDispatcherSync(context);
-        Thread checkForEmpty = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                /* URI for every row of weather data in our weather table*/
-                Uri newsQueryUri = NewsContract.NewsEntry.CONTENT_URI;
-                String[] projectionColumns = {NewsContract.NewsEntry._ID};
-                Cursor cursor = context.getContentResolver().query(
-                        newsQueryUri,
-                        projectionColumns,
-                        null,
-                        null,
-                        null);
-                if (null == cursor || cursor.getCount() == 0) {
-                    startImmediateSync(context);
+    synchronized public static void initialize(@NonNull final Context context, boolean inputInitialisation) {
+        if (inputInitialisation) {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    BreakingNewsSyncTask.syncNews(context);
+                    return null;
                 }
+            }.execute();
 
-                /* Make sure to close the Cursor to avoid memory leaks! */
-                cursor.close();
-            }
-        });
+        } else {
+            if (sInitialized) return;
+            sInitialized = true;
+            scheduleFirebaseJobDispatcherSync(context);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                public Void doInBackground(Void... voids) {
 
-        /* Finally, once the thread is prepared, fire it off to perform our checks. */
-        checkForEmpty.start();
+                    /* URI for every row of news data in our news table*/
+                    Uri newsQueryUri = NewsContract.NewsEntry.CONTENT_URI;
+
+                    String[] projectionColumns = {NewsContract.NewsEntry._ID};
+                    Cursor cursor = context.getContentResolver().query(
+                            newsQueryUri,
+                            projectionColumns,
+                            null,
+                            null,
+                            null);
+                    if (null == cursor || cursor.getCount() == 0) {
+                        startImmediateSync(context);
+                    }
+
+                    /* Make sure to close the Cursor to avoid memory leaks! */
+                    cursor.close();
+                    return null;
+                }
+            }.execute();
+        }
     }
 
 
 
+
     public static void startImmediateSync(@NonNull final Context context) {
-        Intent intentToSyncImmediately= new Intent(context, BreakingNewsSyncIntentService.class);
+        Intent intentToSyncImmediately = new Intent(context, BreakingNewsSyncIntentService.class);
         context.startService(intentToSyncImmediately);
     }
 }

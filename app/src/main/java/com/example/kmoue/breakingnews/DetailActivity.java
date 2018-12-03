@@ -90,7 +90,7 @@ public class DetailActivity extends AppCompatActivity
         int urlImageCol = data.getColumnIndex(NewsContract.NewsEntry.COLUMN_URL_TO_IMAGE);
         int linkCol = data.getColumnIndex(NewsContract.NewsEntry.COLUMN_URL);
         if (data.getString(urlImageCol).equals("null")) {
-            Picasso.with(this).load(R.drawable.breakingnewsfeature).into(mBinding.newsUrlToImage);
+            Picasso.with(this).load(R.drawable.worldconnection).into(mBinding.newsUrlToImage);
         } else {
             Picasso.with(this).load(data.getString(urlImageCol)).into(mBinding.newsUrlToImage);
         }

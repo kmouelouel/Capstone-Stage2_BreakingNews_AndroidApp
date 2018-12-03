@@ -52,9 +52,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
         int sourceCol = mCursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_SOURCE_NAME);
         holder.textView_newsTitle.setText(mCursor.getString(titleCol));
         if (mCursor.getString(imageCol).equals("null")) {
-          Picasso.with(mContext).load(R.drawable.breakingnewsfeature).into(holder.imageView_news);
-            //   holder.imageView_news.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
-        } else {
+             Picasso.with(mContext).load(R.drawable.worldconnection).into(holder.imageView_news);
+         } else {
             Picasso.with(mContext).load(mCursor.getString(imageCol)).into(holder.imageView_news);
         }
         if (mCursor.getString(sourceCol).equals("null")) {

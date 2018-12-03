@@ -10,6 +10,11 @@
     <string name="sports">Sports</string>
     <string name="technology">Technology</string>
     <string name="main_notification_channel_name">Primary</string>
+    <string name="authorHeader">written by: </string>
+    <string name="sourceHeader">Source: </string>
+    <string name="dateHeader">Date:</string>
+    <string name="descriptionHeader">Description :</string>
+    <string name="contentHeader">Content:</string>
 
     <string name="content_authority">com.example.kmoue.breakingnews</string>
 </resources>

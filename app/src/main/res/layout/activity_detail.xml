@@ -1,102 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp"
-    tools:context=".DetailActivity">
-    <ImageView
-        android:id="@+id/news_urlToImage"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/news"
-        android:scaleType="centerCrop"/>
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/margin" >
 
-    <TextView
-        android:id="@+id/news_title"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="title"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Source: "
-            android:layout_marginRight="8dp"
-            android:textStyle="bold"
-            android:textSize="16dp"
-            style="@style/TextAppearance.AppCompat.Large"/>
-        <TextView
-            android:id="@+id/news_source_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="source_name"/>
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/news_urlToImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/news"
+                android:scaleType="centerCrop"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="written by: "
-            android:id="@+id/author_label"
-            android:layout_marginRight="8dp"
-            android:textStyle="bold"
-            android:textSize="14dp"
-            style="@style/TextAppearance.AppCompat.Large"/>
-        <TextView
-            android:id="@+id/news_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="author"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Published: "
-            android:id="@+id/published_label"
-            style="@style/TextAppearance.AppCompat.Large"/>
-        <TextView
-            android:id="@+id/tv_published_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Monday, November 24"/>
-    </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description: "
-        android:textStyle="bold"
-        android:id="@+id/description_label"
-        style="@style/TextAppearance.AppCompat.Large"/>
-    <TextView
-        android:id="@+id/news_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="description"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Content: "
-        android:textStyle="bold"
-        android:id="@+id/content_label"
-        style="@style/TextAppearance.AppCompat.Large"/>
-    <TextView
-        android:id="@+id/news_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="content"/>
-</LinearLayout>
+            <TextView
+                android:id="@+id/news_title"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="title"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:text="@string/sourceHeader"
+                    android:id="@+id/source_label"
+                    style="@style/DetailLabel"/>
+                <TextView
+                    android:id="@+id/news_source_name"
+                    style="@style/DetailValue"
+                    tools:text="source_name"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:text="@string/authorHeader"
+                    android:id="@+id/author_label"
+                    style="@style/DetailLabel"/>
+                <TextView
+                    android:id="@+id/news_author"
+                    style="@style/DetailValue"
+                    tools:text="author"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:text="@string/dateHeader"
+                    android:id="@+id/published_label"
+                    style="@style/DetailLabel"/>
+                <TextView
+                    android:id="@+id/tv_published_date"
+                    style="@style/DetailValue"
+                    tools:text="Monday, November 24"/>
+            </LinearLayout>
+            <TextView
+                android:text="@string/descriptionHeader"
+                android:id="@+id/description_label"
+                style="@style/DetailLabel"/>
+            <TextView
+                android:id="@+id/news_description"
+                style="@style/DetailValue"
+                tools:text="description"/>
+            <TextView
+                android:text="@string/contentHeader"
+                android:id="@+id/content_label"
+                style="@style/DetailLabel"/>
+            <TextView
+                android:id="@+id/news_content"
+                style="@style/DetailValue"
+                tools:text="content"/>
+        </LinearLayout>
+
+    </ScrollView>
     </layout>

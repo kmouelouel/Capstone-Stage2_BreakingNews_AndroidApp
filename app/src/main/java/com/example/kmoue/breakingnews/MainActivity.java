@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.content.Loader;
 
@@ -38,15 +39,13 @@ public class MainActivity extends AppCompatActivity
     private NewsCategoryPreferences mNewsCategoryPreferences;
     private RecyclerView mRecyclerView;
     private NewsAdapter mNewsAdapter;
-    private Toolbar mToolBar;
+    private TextView mTextViewCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mToolBar= (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolBar);
-
+        mTextViewCategory = (TextView) findViewById(R.id.textView_category);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_news);
        // LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -100,48 +99,54 @@ public class MainActivity extends AppCompatActivity
         Context context = MainActivity.this;
         String textToShow = "";
         switch (itemThatWasClickedId) {
-
             case R.id.action_business:
                 NewsCategoryPreferences.updateCategory("business");
                 textToShow = "Business clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mToolBar.setTitle("Business");
+                mTextViewCategory.setVisibility(View.VISIBLE);
+                mTextViewCategory.setText("Business");
                 break;
             case R.id.action_entertainment:
                 NewsCategoryPreferences.updateCategory("entertainment");
                 textToShow = "Entertainment clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mToolBar.setTitle("Entertainment");
+                mTextViewCategory.setVisibility(View.VISIBLE);
+                mTextViewCategory.setText("Entertainment");
                 break;
             case R.id.action_general:
                 NewsCategoryPreferences.updateCategory("general");
                 textToShow = "general clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mToolBar.setTitle("General");
+                mTextViewCategory.setVisibility(View.VISIBLE);
+                mTextViewCategory.setText("General");
                 break;
             case R.id.action_health:
                 NewsCategoryPreferences.updateCategory("health");
                  textToShow = "health clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mToolBar.setTitle("General");
+                mTextViewCategory.setVisibility(View.VISIBLE);
+                mTextViewCategory.setText("General");
                 break;
             case R.id.action_science:
                 NewsCategoryPreferences.updateCategory("science");
                 textToShow = "science clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mToolBar.setTitle("Science");
+                mTextViewCategory.setVisibility(View.VISIBLE);
+                mTextViewCategory.setText("Science");
                 break;
             case R.id.action_sports:
                 NewsCategoryPreferences.updateCategory("sports");
                 textToShow = "sports clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mToolBar.setTitle("Sports");
+                mTextViewCategory.setVisibility(View.VISIBLE);
+                mTextViewCategory.setText("Sports");
                 break;
             case R.id.action_technology:
                 NewsCategoryPreferences.updateCategory("technology");
                 textToShow = "technology clicked";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mToolBar.setTitle("Technology");
+                mTextViewCategory.setVisibility(View.VISIBLE);
+                mTextViewCategory.setText("Technology");
                 break;
         }
         invalidateData();

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,9 @@ public class DetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+       // Toolbar mToolBar= (Toolbar) findViewById(R.id.toolbar);
+      //  setSupportActionBar(mToolBar);
+      //  mToolBar.setTitle("General");
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
         mUri = getIntent().getData();
@@ -122,7 +126,6 @@ public class DetailActivity extends AppCompatActivity
         mBinding.newsSourceName.setText(data.getString(sourceNameCol));
         news_Link = data.getString(linkCol);
         String mPublishedDate =data.getString(publishedDateCol);
-        mPublishedDate=  mPublishedDate.replaceAll("[A-Z]?", " ");
         mBinding.tvPublishedDate.setText(mPublishedDate);
         mBinding.newsContent.setText(data.getString(contentCol));
 

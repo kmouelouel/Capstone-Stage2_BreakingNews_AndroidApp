@@ -5,14 +5,27 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+    <TextView
+        android:id="@+id/textView_category"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="4dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:paddingBottom="@dimen/margin"
+        android:paddingTop="@dimen/margin"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_news"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/textView_category"/>
 
     <ProgressBar
         android:id="@+id/progressBar_indicator"

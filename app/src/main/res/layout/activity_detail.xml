@@ -9,7 +9,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="@dimen/margin" >
-
             <ImageView
                 android:id="@+id/news_urlToImage"
                 android:layout_width="match_parent"

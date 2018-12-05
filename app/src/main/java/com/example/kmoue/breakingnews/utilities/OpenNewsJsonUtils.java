@@ -52,7 +52,9 @@ public class OpenNewsJsonUtils {
                     newsValues.put(NewsContract.NewsEntry.COLUMN_DESCRIPTION, mNewsObject.getString(KEY_DESCRIPTION));
                     newsValues.put(NewsContract.NewsEntry.COLUMN_URL, mNewsObject.getString(KEY_URL));
                     newsValues.put(NewsContract.NewsEntry.COLUMN_URL_TO_IMAGE, mNewsObject.getString(KEY_URL_TO_IMAGE));
-                    newsValues.put(NewsContract.NewsEntry.COLUMN_PUBLISHED_DATE, mNewsObject.getString(KEY_PUBLISHEDAT));
+                    String mPublishedDate=mNewsObject.getString(KEY_PUBLISHEDAT);
+                    mPublishedDate = mPublishedDate.replaceAll("[A-Z]?", " ");
+                    newsValues.put(NewsContract.NewsEntry.COLUMN_PUBLISHED_DATE, mPublishedDate);
                     newsValues.put(NewsContract.NewsEntry.COLUMN_CONTENT, mNewsObject.getString(KEY_CONTENT));
                     newsContentValues[i] = newsValues;
                 }

@@ -1,13 +1,49 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#09C"
-    android:padding="@dimen/widget_margin">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="horizontal"
+    android:background="@color/black"
+    android:layout_margin="8dp">
 
-    <ImageView
-        android:id="@+id/widget_news_image"
+<ImageView
+    android:id="@+id/widget_news_image"
+    android:layout_width="90dp"
+    android:layout_height="90dp"
+    android:layout_gravity="center"
+    android:src="@drawable/news_icon"
+    android:paddingLeft="8dp"
+   />
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/news"/>
+        android:orientation="vertical">
+        <TextView
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/widget_title"
+            android:textColor="@color/white"
+            android:layout_margin="8dp"
+            android:textStyle="bold"/>
+        <TextView
+            style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/widget_source"
+            android:textColor="@color/white"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:textStyle="italic"
+            android:fontFamily=""/>
+        <TextView
+            style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/widget_date"
+            android:textColor="@color/white"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:textStyle="italic"/>
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

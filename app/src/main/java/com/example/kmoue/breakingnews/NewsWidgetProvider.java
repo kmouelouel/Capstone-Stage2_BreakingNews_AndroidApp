@@ -5,23 +5,39 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.os.Bundle;
 import android.widget.RemoteViews;
+
+import com.example.kmoue.breakingnews.widget.BreakingNewsWidgetService;
+import com.squareup.picasso.Picasso;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class NewsWidgetProvider extends AppWidgetProvider {
-
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
-
+    static void updateAppWidget(Context context,  AppWidgetManager appWidgetManager,String title,String source,String date,String image, int appWidgetId)
+    {
+        // Create an Intent to launch MainActivity when clicked
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.news_widget_provider);
-        //create an intent to launch MainActivity when clicked
-        Intent intent   = new Intent(context,MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
-        views.setOnClickPendingIntent(R.id.widget_news_image,pendingIntent);
+        // Update image
+        views.setTextViewText(R.id.widget_title,title);
+        views.setTextViewText(R.id.widget_source,source);
+        views.setTextViewText(R.id.widget_date,date);
+        views.setOnClickPendingIntent(R.id.widget_news_image, pendingIntent);
+       /* Bundle options=appWidgetManager.getAppWidgetOptions(appWidgetId);
+        int width= options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+
+        if(width<300) {
+            views = getSingleRemoteView(context);
+        }else {
+            views=getBreakingGridRemoteView(context);
+        }
+*/
 
 
         // Instruct the widget manager to update the widget
@@ -31,8 +47,17 @@ public class NewsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
+        //Start the intent service update widget action,
+        // //the service takes care of updating the widgets UI
+
+        BreakingNewsWidgetService.startActionBreakingNews(context);
+    }
+
+
+    public static void updateBreakingNewsWidgets(Context context, AppWidgetManager appWidgetManager,
+                                                 String title,String source,String date,String image, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            updateAppWidget(context, appWidgetManager,title,source,date,image, appWidgetId);
         }
     }
 
@@ -44,6 +69,19 @@ public class NewsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    private static RemoteViews getSingleRemoteView(Context context){
+        // Construct the RemoteViews object
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.news_widget_provider);
+        //create an intent to launch MainActivity when clicked
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.widget_news_image, pendingIntent);
+        return views;
+    }
+    private static RemoteViews getBreakingGridRemoteView(Context context) {
+    return null;
     }
 }
 

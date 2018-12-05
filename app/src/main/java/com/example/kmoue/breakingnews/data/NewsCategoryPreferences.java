@@ -6,6 +6,7 @@ public class NewsCategoryPreferences {
 
     private static String  category;
 
+
     public static String  returnCategory(Context context) {
         return category;
     }

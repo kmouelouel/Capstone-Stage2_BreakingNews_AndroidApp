@@ -170,6 +170,14 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         getSupportLoaderManager().restartLoader(NEWS_LOADER_ID, null, this);
+       // BreakingNewsSyncUtils.initialize(this,true);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 
     @NonNull

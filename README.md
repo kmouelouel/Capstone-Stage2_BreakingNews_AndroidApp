@@ -16,10 +16,14 @@ This project was developed as a part of [Android Developer Nanodegree] https://w
 > Filter the news by select the category from menu: Business,Entertainment,General,Heath, Science, Sports, Technology.
 > Detail breaking news article shows more information such as published date, author, description and link to the article
 
+## Key Consideration
+>The app handles the data by using content provider to store new data\\\\=\
+
 ##User Interface
 
 ![Breaking_News screenshot](./screenshots/mainActivity.PNG)
 ![Breaking_News screenshot](./screenshots/category.PNG)
+![Breaking_News screenshot](./screenshots/selectedCategory.PNG)
 ![Breaking_News screenshot](./screenshots/detailActivity.PNG)
 ![Breaking_News screenshot](./screenshots/widget.PNG)
 

@@ -18,8 +18,8 @@ This project was developed as a part of [Android Developer Nanodegree] https://w
 
 ##User Interface
 
-![Breaking_News screenshot](./screenshots/mainActivity.png)
-![Breaking_News screenshot](./screenshots/category.png)
-![Breaking_News screenshot](./screenshots/detailActivity.png)
-![Breaking_News screenshot](./screenshots/widget.png)
+![Breaking_News screenshot](./screenshots/mainActivity.PNG)
+![Breaking_News screenshot](./screenshots/category.PNG)
+![Breaking_News screenshot](./screenshots/detailActivity.PNG)
+![Breaking_News screenshot](./screenshots/widget.PNG)
 

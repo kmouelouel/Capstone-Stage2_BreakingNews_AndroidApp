@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'breaking'
+            keyPassword 'headline'
+            storeFile file('C:/Users/kmoue/Desktop/Android_Udacity_Git/CapstoneStageApp/keystore.jks')
+            storePassword 'headline'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.kmoue.breakingnews"
@@ -14,27 +22,27 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-              }
+            signingConfig signingConfigs.config
+        }
     }
     dataBinding.enabled = true
-
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
-
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     //added dependencies;
     implementation 'com.squareup.picasso:picasso:2.5.2'
-
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     //   Add RecyclerView dependency
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //  Add the FirebaseJobDispatcher dependency to the project
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
+    //added dependecy to Google Mobile ads
+    implementation "com.google.android.gms:play-services-ads:16.0.0"
 }

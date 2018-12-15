@@ -44,9 +44,13 @@ public class DetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-       // Toolbar mToolBar= (Toolbar) findViewById(R.id.toolbar);
-      //  setSupportActionBar(mToolBar);
-      //  mToolBar.setTitle("General");
+      //  Toolbar mToolBar =  findViewById(R.id.toolBar);
+     //   setSupportActionBar(mToolBar);
+     //   if (getSupportActionBar() != null)
+      //      getSupportActionBar().setTitle("Details");
+     //   getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    //    getSupportActionBar().setDisplayShowHomeEnabled(true);
+    //    mToolBar.inflateMenu(R.menu.menu_link);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
         mUri = getIntent().getData();
@@ -54,6 +58,11 @@ public class DetailActivity extends AppCompatActivity
 
         getSupportLoaderManager().initLoader(ID_DETAIL_LOADER, null, this);
 
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -125,12 +134,11 @@ public class DetailActivity extends AppCompatActivity
         // mBinding.newsDescription.setText(data.getString(descriptionCol));
         mBinding.newsSourceName.setText(data.getString(sourceNameCol));
         news_Link = data.getString(linkCol);
-        String mPublishedDate =data.getString(publishedDateCol);
+        String mPublishedDate = data.getString(publishedDateCol);
         mBinding.tvPublishedDate.setText(mPublishedDate);
         mBinding.newsContent.setText(data.getString(contentCol));
 
     }
-
 
 
     @Override
@@ -149,7 +157,7 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId= item.getItemId();
+        int itemId = item.getItemId();
         if (itemId == R.id.action_linkTo) {
             Intent linkToGo = new Intent(Intent.ACTION_VIEW);
             linkToGo.setData(Uri.parse(news_Link));

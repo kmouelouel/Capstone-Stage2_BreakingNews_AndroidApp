@@ -33,35 +33,48 @@ public class MainActivity extends AppCompatActivity
         implements NewsAdapter.NewsAdapterOnClickHandler,
         LoaderManager.LoaderCallbacks<Cursor> {
     private static final int NEWS_LOADER_ID = 22;
-    private static final String SAVE_STATE_KEY = "savedState";
+    private static final String SAVE_CATEGORY_KEY = "savedCategory";
+    private static final String SAVE_ADAPTER_POSITION_KEY = "savedPosition";
+    private static String mCategory = "";
     private int mPosition = RecyclerView.NO_POSITION;
     private ProgressBar mLoadingIndicator;
-    private NewsCategoryPreferences mNewsCategoryPreferences;
     private RecyclerView mRecyclerView;
     private NewsAdapter mNewsAdapter;
-    private TextView mTextViewCategory;
+    private   GridLayoutManager layoutManager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mTextViewCategory = (TextView) findViewById(R.id.textView_category);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_news);
-       // LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, getSpan());
+        layoutManager = new GridLayoutManager(this, getSpan());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mNewsAdapter = new NewsAdapter(this, this);
         mRecyclerView.setAdapter(mNewsAdapter);
-        showLoading();
-        int loaderId = NEWS_LOADER_ID;
-        LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
-        Bundle bundleForLoader = null;
-        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
-        BreakingNewsSyncUtils.initialize(this,false);
-
+        if(savedInstanceState!=null) {
+            mPosition = savedInstanceState.getInt(SAVE_ADAPTER_POSITION_KEY);
+            mRecyclerView.smoothScrollToPosition(mPosition);
+            mCategory = savedInstanceState.getString(SAVE_CATEGORY_KEY);
+        }else{
+            showLoading();
+            int loaderId = NEWS_LOADER_ID;
+            LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
+            Bundle bundleForLoader = null;
+            getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+            BreakingNewsSyncUtils.initialize(this, false);
+        }
+        if (!mCategory.equals("")) {
+            this.setTitle(getResources().getString(R.string.app_name)+" - "+mCategory.toUpperCase());
+        } else {
+            this.setTitle(getResources().getString(R.string.app_name));
+        }
+        //added a google AdMob
     }
+
     private int getSpan() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             return 2;
@@ -78,6 +91,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(int idPosition) {
+        mPosition = idPosition;
         Intent intentToStartDetailActivity = new Intent(this, DetailActivity.class);
         Uri uriForNewsClicked = NewsContract.NewsEntry.buildNewsUriWithID(idPosition);
         intentToStartDetailActivity.setData(uriForNewsClicked);
@@ -97,61 +111,43 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
         Context context = MainActivity.this;
-        String textToShow = "";
+        mPosition=0;
+        UpdateTitle(itemThatWasClickedId);
         switch (itemThatWasClickedId) {
             case R.id.action_business:
-                NewsCategoryPreferences.updateCategory("business");
-                textToShow = "Business clicked";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mTextViewCategory.setVisibility(View.VISIBLE);
-                mTextViewCategory.setText("Business");
+                mCategory = getResources().getString(R.string.business).toLowerCase();
+                NewsCategoryPreferences.updateCategory(mCategory);
                 break;
             case R.id.action_entertainment:
-                NewsCategoryPreferences.updateCategory("entertainment");
-                textToShow = "Entertainment clicked";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mTextViewCategory.setVisibility(View.VISIBLE);
-                mTextViewCategory.setText("Entertainment");
+                mCategory = getResources().getString(R.string.entertainment).toLowerCase();
+                NewsCategoryPreferences.updateCategory(mCategory);
                 break;
             case R.id.action_general:
-                NewsCategoryPreferences.updateCategory("general");
-                textToShow = "general clicked";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mTextViewCategory.setVisibility(View.VISIBLE);
-                mTextViewCategory.setText("General");
+                mCategory = getResources().getString(R.string.general).toLowerCase();
+                NewsCategoryPreferences.updateCategory(mCategory);
                 break;
             case R.id.action_health:
-                NewsCategoryPreferences.updateCategory("health");
-                 textToShow = "health clicked";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mTextViewCategory.setVisibility(View.VISIBLE);
-                mTextViewCategory.setText("General");
+                mCategory = getResources().getString(R.string.health).toLowerCase();
+                NewsCategoryPreferences.updateCategory(mCategory);
                 break;
             case R.id.action_science:
-                NewsCategoryPreferences.updateCategory("science");
-                textToShow = "science clicked";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mTextViewCategory.setVisibility(View.VISIBLE);
-                mTextViewCategory.setText("Science");
+                mCategory = getResources().getString(R.string.science).toLowerCase();
+                NewsCategoryPreferences.updateCategory(mCategory);
                 break;
             case R.id.action_sports:
-                NewsCategoryPreferences.updateCategory("sports");
-                textToShow = "sports clicked";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mTextViewCategory.setVisibility(View.VISIBLE);
-                mTextViewCategory.setText("Sports");
+                mCategory = getResources().getString(R.string.sports).toLowerCase();
+                NewsCategoryPreferences.updateCategory(mCategory);
                 break;
             case R.id.action_technology:
-                NewsCategoryPreferences.updateCategory("technology");
-                textToShow = "technology clicked";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                mTextViewCategory.setVisibility(View.VISIBLE);
-                mTextViewCategory.setText("Technology");
+                mCategory = getResources().getString(R.string.technology).toLowerCase();
+                NewsCategoryPreferences.updateCategory(mCategory);
                 break;
+
+
         }
         invalidateData();
         getSupportLoaderManager().restartLoader(NEWS_LOADER_ID, null, this);
-        BreakingNewsSyncUtils.initialize(this,true);
+        BreakingNewsSyncUtils.initialize(this, true);
         return super.onOptionsItemSelected(item);
     }
 
@@ -170,14 +166,21 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         getSupportLoaderManager().restartLoader(NEWS_LOADER_ID, null, this);
-       // BreakingNewsSyncUtils.initialize(this,true);
-
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        if(layoutManager != null){
+            mPosition =layoutManager.findFirstVisibleItemPosition();
+            outState.putInt(SAVE_ADAPTER_POSITION_KEY, mPosition);
+        }else
+        {
+            mPosition=0;
+        }
 
+        outState.putString(SAVE_CATEGORY_KEY, mCategory);
     }
 
     @NonNull
@@ -212,5 +215,35 @@ public class MainActivity extends AppCompatActivity
         mNewsAdapter.swapCursor(null);
     }
 
+    private void UpdateTitle(int inSelectedOption) {
+        Context context= getApplicationContext();
+        switch (inSelectedOption) {
+            case R.id.action_business:
+                this.setTitle(getResources().getString(R.string.business));
+                break;
+            case R.id.action_entertainment:
+                this.setTitle(getResources().getString(R.string.entertainment));
+                break;
+            case R.id.action_general:
+                this.setTitle(getResources().getString(R.string.general));
+                break;
+            case R.id.action_health:
+                this.setTitle(getResources().getString(R.string.health));
+                break;
+            case R.id.action_science:
+                this.setTitle(getResources().getString(R.string.science));
+                break;
+            case R.id.action_sports:
+                this.setTitle(getResources().getString(R.string.sports));
+                break;
+            case R.id.action_technology:
+                this.setTitle(getResources().getString(R.string.technology));
+                break;
+
+            default:
+                this.setTitle(getResources().getString(R.string.app_name));
+        }
+
+    }
 }
 

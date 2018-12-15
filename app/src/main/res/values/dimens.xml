@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="detail_label_margin">16dp</dimen>
-    <dimen name="margin">16dp</dimen>
-    <dimen name="title_margin">16dp</dimen>
-    <dimen name="padding">24dp</dimen>
-    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="margin">32dp</dimen>
+    <dimen name="element_margin">8dp</dimen>
+    <dimen name="content_margin">64dp</dimen>
+    <dimen name="toolBar_height">84dp</dimen>
+    <dimen name="padding">8dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information

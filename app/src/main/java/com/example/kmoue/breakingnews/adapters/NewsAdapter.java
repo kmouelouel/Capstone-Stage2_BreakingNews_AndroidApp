@@ -93,5 +93,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsAdapterVie
         }
     }
 
+    public Cursor getCursorValue(){
+       return mCursor;
+    }
+
 
 }

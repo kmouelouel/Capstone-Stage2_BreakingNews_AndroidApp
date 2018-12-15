@@ -61,14 +61,7 @@ public class NotificationUtils {
 
             NotificationManager notificationManager = (NotificationManager)
                     context.getSystemService(Context.NOTIFICATION_SERVICE);
-            // COMPLETED (9) Create a notification channel for Android O devices
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel mChannel = new NotificationChannel(
-                        NOTIFICATION_CHANNEL_ID,
-                        context.getString(R.string.main_notification_channel_name),
-                        NotificationManager.IMPORTANCE_HIGH);
-                notificationManager.createNotificationChannel(mChannel);
-            }
+
             NotificationCompat.Builder notificationBuilder =
                     new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                             .setColor(ContextCompat.getColor(context, R.color.colorPrimary))

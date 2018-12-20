@@ -27,6 +27,9 @@ import com.example.kmoue.breakingnews.adapters.NewsAdapter;
 import com.example.kmoue.breakingnews.data.NewsCategoryPreferences;
 import com.example.kmoue.breakingnews.data.NewsContract;
 import com.example.kmoue.breakingnews.sync.BreakingNewsSyncUtils;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 
 public class MainActivity extends AppCompatActivity
@@ -40,8 +43,8 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar mLoadingIndicator;
     private RecyclerView mRecyclerView;
     private NewsAdapter mNewsAdapter;
-    private   GridLayoutManager layoutManager;
-
+    private GridLayoutManager layoutManager;
+    private AdView mAdView;
 
 
     @Override
@@ -55,24 +58,20 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setHasFixedSize(true);
         mNewsAdapter = new NewsAdapter(this, this);
         mRecyclerView.setAdapter(mNewsAdapter);
-        if(savedInstanceState!=null) {
-            mPosition = savedInstanceState.getInt(SAVE_ADAPTER_POSITION_KEY);
-            mRecyclerView.smoothScrollToPosition(mPosition);
-            mCategory = savedInstanceState.getString(SAVE_CATEGORY_KEY);
-        }else{
-            showLoading();
-            int loaderId = NEWS_LOADER_ID;
-            LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
-            Bundle bundleForLoader = null;
-            getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
-            BreakingNewsSyncUtils.initialize(this, false);
-        }
-        if (!mCategory.equals("")) {
-            this.setTitle(getResources().getString(R.string.app_name)+" - "+mCategory.toUpperCase());
-        } else {
-            this.setTitle(getResources().getString(R.string.app_name));
-        }
+
+        showLoading();
+        int loaderId = NEWS_LOADER_ID;
+        LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
+        Bundle bundleForLoader = null;
+        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+        BreakingNewsSyncUtils.initialize(this, false);
+
         //added a google AdMob
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private int getSpan() {
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
         Context context = MainActivity.this;
-        mPosition=0;
+        mPosition = 0;
         UpdateTitle(itemThatWasClickedId);
         switch (itemThatWasClickedId) {
             case R.id.action_business:
@@ -172,15 +171,27 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(layoutManager != null){
-            mPosition =layoutManager.findFirstVisibleItemPosition();
+        if (layoutManager != null) {
+            mPosition = layoutManager.findFirstVisibleItemPosition();
             outState.putInt(SAVE_ADAPTER_POSITION_KEY, mPosition);
-        }else
-        {
-            mPosition=0;
+        } else {
+            mPosition = 0;
         }
 
         outState.putString(SAVE_CATEGORY_KEY, mCategory);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mPosition = savedInstanceState.getInt(SAVE_ADAPTER_POSITION_KEY);
+        mCategory = savedInstanceState.getString(SAVE_CATEGORY_KEY);
+        mRecyclerView.smoothScrollToPosition(mPosition);
+        if (!mCategory.equals("")) {
+            this.setTitle(getResources().getString(R.string.app_name) + " - " + mCategory.toUpperCase());
+        } else {
+            this.setTitle(getResources().getString(R.string.app_name));
+        }
     }
 
     @NonNull
@@ -216,7 +227,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void UpdateTitle(int inSelectedOption) {
-        Context context= getApplicationContext();
+        Context context = getApplicationContext();
         switch (inSelectedOption) {
             case R.id.action_business:
                 this.setTitle(getResources().getString(R.string.business));

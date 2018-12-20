@@ -42,21 +42,8 @@ public class BreakingNewsSyncTask {
                 }
             BreakingNewsWidgetService.startActionBreakingNews(context);
 
-            //check if notification are enabled, im my case it will show always:
-            boolean notificationsEnabled = areNotificationsEnabled(context);
-            long timeSinceLastNotification =getEllapsedTimeSinceLastNotification(context);
-            boolean oneHourPassedSinceLastNotification = false;
-            //(14) Check if a day has passed since the last notification
-            if (timeSinceLastNotification >= DateUtils.MINUTE_IN_MILLIS) {
-                oneHourPassedSinceLastNotification = true;
-            }
+            NotificationUtils.notifyUserOfNewBreakingNews(context);
 
-           // COMPLETED (15) If more than a day have passed and notifications are enabled, notify the user
-            if (notificationsEnabled && oneHourPassedSinceLastNotification) {
-                NotificationUtils.notifyUserOfNewBreakingNews(context);
-            }
-
-            saveLastNotificationTime(System.currentTimeMillis());
         }catch(Exception e){
             e.printStackTrace();
 

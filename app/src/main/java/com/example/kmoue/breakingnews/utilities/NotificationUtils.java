@@ -23,6 +23,8 @@ import com.example.kmoue.breakingnews.data.NewsContract;
 import com.example.kmoue.breakingnews.sync.BreakingNewsSyncIntentService;
 import com.example.kmoue.breakingnews.sync.BreakingNewsSyncTask;
 
+import static com.example.kmoue.breakingnews.data.NewsCategoryPreferences.saveLastNotificationTime;
+
 public class NotificationUtils {
 
 
@@ -92,9 +94,10 @@ public class NotificationUtils {
 
 
             notificationManager.notify(NEWS_NOTIFICATION_ID, notificationBuilder.build());
-
+            saveLastNotificationTime(System.currentTimeMillis());
         }
-        lastBreakingNewsCursor.close();
+        lastBreakingNewsCursor.close(); ;
+
 
     }
 

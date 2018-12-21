@@ -39,10 +39,12 @@ public class BreakingNewsSyncTask {
                 newsContentResolver.bulkInsert(
                         NewsContract.NewsEntry.CONTENT_URI,
                         newsValues);
-                }
+              //added notification:
+                NotificationUtils.notifyUserOfNewBreakingNews(context);
+            }
             BreakingNewsWidgetService.startActionBreakingNews(context);
 
-            NotificationUtils.notifyUserOfNewBreakingNews(context);
+
 
         }catch(Exception e){
             e.printStackTrace();

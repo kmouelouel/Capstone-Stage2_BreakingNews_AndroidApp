@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import com.example.kmoue.breakingnews.data.NewsContract;
 import com.example.kmoue.breakingnews.databinding.ActivityDetailBinding;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity
@@ -57,6 +60,13 @@ public class DetailActivity extends AppCompatActivity
         if (mUri == null) throw new NullPointerException("URI for DetailActivity cannot be null");
 
         getSupportLoaderManager().initLoader(ID_DETAIL_LOADER, null, this);
+
+        //added a google AdMob
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+       AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
     }
     @Override

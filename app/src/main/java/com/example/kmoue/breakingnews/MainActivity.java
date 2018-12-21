@@ -27,9 +27,6 @@ import com.example.kmoue.breakingnews.adapters.NewsAdapter;
 import com.example.kmoue.breakingnews.data.NewsCategoryPreferences;
 import com.example.kmoue.breakingnews.data.NewsContract;
 import com.example.kmoue.breakingnews.sync.BreakingNewsSyncUtils;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 
 public class MainActivity extends AppCompatActivity
@@ -44,7 +41,6 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private NewsAdapter mNewsAdapter;
     private GridLayoutManager layoutManager;
-    private AdView mAdView;
 
 
     @Override
@@ -66,12 +62,6 @@ public class MainActivity extends AppCompatActivity
         getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
         BreakingNewsSyncUtils.initialize(this, false);
 
-        //added a google AdMob
-        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
     }
 
     private int getSpan() {
@@ -175,7 +165,7 @@ public class MainActivity extends AppCompatActivity
             mPosition = layoutManager.findFirstVisibleItemPosition();
             outState.putInt(SAVE_ADAPTER_POSITION_KEY, mPosition);
         } else {
-            mPosition = 0;
+            mPosition = RecyclerView.NO_POSITION;
         }
 
         outState.putString(SAVE_CATEGORY_KEY, mCategory);

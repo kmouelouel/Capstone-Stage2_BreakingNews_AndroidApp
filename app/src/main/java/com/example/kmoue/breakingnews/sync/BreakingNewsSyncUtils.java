@@ -20,9 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 public class BreakingNewsSyncUtils {
     // Add constant values to sync news every 15 minutes
-    private static final int REMINDER_INTERVAL_MINUTES = 15;
-    private static final int REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(REMINDER_INTERVAL_MINUTES));
-    private static final int SYNC_FLEXTIME_SECONDS = REMINDER_INTERVAL_SECONDS;
+    private static final int SYNC_INTERVAL_HOURS = 3;
+    private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
+    private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
     private static final String NEWS_SYNC_TAG = "breakingNews-sync";
     private static boolean sInitialized;
     // Create a method to schedule our periodic breakingNews sync
@@ -39,8 +39,8 @@ public class BreakingNewsSyncUtils {
                 .setLifetime(Lifetime.FOREVER)
                 .setRecurring(true)
                 .setTrigger(Trigger.executionWindow(
-                        REMINDER_INTERVAL_SECONDS,
-                        REMINDER_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
+                        SYNC_INTERVAL_SECONDS,
+                        SYNC_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
                 .setReplaceCurrent(true)
                 .build();
         dispatcher.schedule(syncNewsJob);
@@ -60,10 +60,10 @@ public class BreakingNewsSyncUtils {
             if (sInitialized) return;
             sInitialized = true;
             scheduleFirebaseJobDispatcherSync(context);
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                public Void doInBackground(Void... voids) {
 
+            Thread checkForEmpty = new Thread(new Runnable() {
+                @Override
+                public void run() {
                     /* URI for every row of news data in our news table*/
                     Uri newsQueryUri = NewsContract.NewsEntry.CONTENT_URI;
 
@@ -74,15 +74,18 @@ public class BreakingNewsSyncUtils {
                             null,
                             null,
                             null);
+
                     if (null == cursor || cursor.getCount() == 0) {
                         startImmediateSync(context);
                     }
-
                     /* Make sure to close the Cursor to avoid memory leaks! */
                     cursor.close();
-                    return null;
                 }
-            }.execute();
+            });
+
+            /* Finally, once the thread is prepared, fire it off to perform our checks. */
+            checkForEmpty.start();
+
         }
     }
 

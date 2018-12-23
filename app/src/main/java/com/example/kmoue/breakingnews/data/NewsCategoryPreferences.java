@@ -4,7 +4,7 @@ import android.content.Context;
 
 public class NewsCategoryPreferences {
 
-    private static String  category;
+    private static String  category="";
     private static Boolean notificationsEnabled = true;
     private static long timeLastNotification =0;
     private static long lastNotificationTimeMillis=0;

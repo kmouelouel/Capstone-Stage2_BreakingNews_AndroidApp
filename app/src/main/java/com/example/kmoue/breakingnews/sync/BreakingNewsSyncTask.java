@@ -22,7 +22,7 @@ import static com.example.kmoue.breakingnews.data.NewsCategoryPreferences.saveLa
 
 public class BreakingNewsSyncTask {
 
-    synchronized public static void syncNews(Context context){
+    synchronized  static void syncNews(Context context){
         try{
 
             String category= returnCategory(context);
@@ -30,7 +30,6 @@ public class BreakingNewsSyncTask {
             String JsonNewsResponse = NetworkUtils.getResponseFromHttpUrl(newsRequestUrl);
             ContentValues[] newsValues = OpenNewsJsonUtils.getNewsContentValueFromJson(context,JsonNewsResponse);
             if(newsValues != null && newsValues.length != 0){
-
                 ContentResolver newsContentResolver = context.getContentResolver();
                 newsContentResolver.delete(
                         NewsContract.NewsEntry.CONTENT_URI,
@@ -59,6 +58,7 @@ public class BreakingNewsSyncTask {
             saveLastNotificationTime(System.currentTimeMillis());
 
         }catch(Exception e){
+
             e.printStackTrace();
 
         }

@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.kmoue.breakingnews.data.NewsContract;
 import com.firebase.jobdispatcher.Constraint;
@@ -17,9 +19,9 @@ import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class BreakingNewsSyncUtils {
-    // Add constant values to sync news every 15 minutes
     private static final int SYNC_INTERVAL_HOURS = 3;
     private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
     private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
@@ -61,30 +63,35 @@ public class BreakingNewsSyncUtils {
             sInitialized = true;
             scheduleFirebaseJobDispatcherSync(context);
 
-            Thread checkForEmpty = new Thread(new Runnable() {
+            new AsyncTask<Void, Void, Void>() {
                 @Override
-                public void run() {
-                    /* URI for every row of news data in our news table*/
-                    Uri newsQueryUri = NewsContract.NewsEntry.CONTENT_URI;
+                public Void doInBackground( Void... voids ) {
+                    try{
+                        /* URI for every row of news data in our news table*/
+                        Uri newsQueryUri = NewsContract.NewsEntry.CONTENT_URI;
 
-                    String[] projectionColumns = {NewsContract.NewsEntry._ID};
-                    Cursor cursor = context.getContentResolver().query(
-                            newsQueryUri,
-                            projectionColumns,
-                            null,
-                            null,
-                            null);
+                        String[] projectionColumns = {NewsContract.NewsEntry._ID};
+                        Cursor cursor = context.getContentResolver().query(
+                                newsQueryUri,
+                                null,
+                                null,
+                                null,
+                                null);
+                        if (null == cursor || cursor.getCount() == 0) {
+                           startImmediateSync(context);
+                        }
 
-                    if (null == cursor || cursor.getCount() == 0) {
-                        startImmediateSync(context);
+                        /* Make sure to close the Cursor to avoid memory leaks! */
+                        cursor.close();
+
                     }
-                    /* Make sure to close the Cursor to avoid memory leaks! */
-                    cursor.close();
+                    catch(Exception e){
+                        Log.e("BreakingNewsSyncUtils",e.getMessage());
+                    }
+                    return null;
                 }
-            });
 
-            /* Finally, once the thread is prepared, fire it off to perform our checks. */
-            checkForEmpty.start();
+           }.execute();
 
         }
     }

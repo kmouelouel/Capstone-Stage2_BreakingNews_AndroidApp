@@ -21,15 +21,14 @@ public final class NetworkUtils {
     private final static String COUNTRY_VALUE = "us";
 
     public static URL buildUrl(String category) {
-        //https://api.themoviedb.org/3/movie/top_rated?api_key=api_key
         Uri.Builder builtUri = new Uri.Builder();
         builtUri.scheme("https")
                     .authority("newsapi.org")
                     .appendPath("v2")
                     .appendPath("top-headlines")
                     .appendQueryParameter(COUNTRY_PARAM, COUNTRY_VALUE)
-                    .appendQueryParameter(API_KEY_PARAM, API_KEY)
-                     .appendQueryParameter(CATEGORY_PARAM, category);
+                    .appendQueryParameter(API_KEY_PARAM, API_KEY);
+         if(!category.isEmpty())       builtUri.appendQueryParameter(CATEGORY_PARAM, category);
 
         URL url = null;
         try {

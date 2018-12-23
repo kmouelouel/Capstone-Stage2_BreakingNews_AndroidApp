@@ -22,7 +22,8 @@ public class BreakingNewsFirebaseJobService  extends JobService {
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Void aVoid)
+            {
                  jobFinished(jobParameters,false);
             }
         };

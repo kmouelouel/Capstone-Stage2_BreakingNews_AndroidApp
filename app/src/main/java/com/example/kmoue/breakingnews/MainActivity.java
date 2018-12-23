@@ -3,6 +3,7 @@ package com.example.kmoue.breakingnews;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -26,7 +27,11 @@ import android.support.v4.content.Loader;
 import com.example.kmoue.breakingnews.adapters.NewsAdapter;
 import com.example.kmoue.breakingnews.data.NewsCategoryPreferences;
 import com.example.kmoue.breakingnews.data.NewsContract;
+import com.example.kmoue.breakingnews.sync.BreakingNewsSyncTask;
 import com.example.kmoue.breakingnews.sync.BreakingNewsSyncUtils;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 
 public class MainActivity extends AppCompatActivity
@@ -40,35 +45,32 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar mLoadingIndicator;
     private RecyclerView mRecyclerView;
     private NewsAdapter mNewsAdapter;
-    private GridLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setElevation(0f);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_news);
-        layoutManager = new GridLayoutManager(this, getSpan());
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mNewsAdapter = new NewsAdapter(this, this);
         mRecyclerView.setAdapter(mNewsAdapter);
-
         showLoading();
-        int loaderId = NEWS_LOADER_ID;
-        LoaderManager.LoaderCallbacks<Cursor> callback = MainActivity.this;
-        Bundle bundleForLoader = null;
-        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+        getSupportLoaderManager().initLoader(NEWS_LOADER_ID, null, this);
         BreakingNewsSyncUtils.initialize(this, false);
 
-    }
+        //added a google AdMob
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
-    private int getSpan() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            return 2;
-        }
-        return 1;
     }
 
     private void showLoading() {
@@ -209,6 +211,7 @@ public class MainActivity extends AppCompatActivity
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mRecyclerView.smoothScrollToPosition(mPosition);
         if (data.getCount() != 0) showDataView();
+
     }
 
     @Override

@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'breaking'
             keyPassword 'headline'
-            storeFile file('C:/Users/kmoue/Desktop/Android_Udacity_Git/CapstoneStageApp/keystore.jks')
+            storeFile file('../Android_Udacity_Git/CapstoneStageApp/keystore.jks')
             storePassword 'headline'
         }
     }
